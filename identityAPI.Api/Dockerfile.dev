@@ -1,0 +1,13 @@
+# Development container with .NET 9 SDK
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dev
+WORKDIR /src/identityAPI.Api
+
+# Copy all project files
+COPY . .
+
+# Install dotnet-ef global tool for EF Core commands
+RUN dotnet tool install --global dotnet-ef --version 9.0.0
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Use dotnet watch for development
+ENTRYPOINT ["dotnet", "watch", "run", "--urls", "http://+:8080"]

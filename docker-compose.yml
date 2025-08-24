@@ -1,0 +1,57 @@
+---
+services:
+  api:
+    build:
+      context: .
+      dockerfile: identityAPI.Api/Dockerfile
+    container_name: identityapi-api
+    ports:
+      - 5000:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=identityapidb;Username=postgres;Password=postgres
+      - Jwt__Key=super_secret_dev_key
+      - Jwt__Issuer=identityapi
+    depends_on:
+      - db
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  db:
+    image: postgres:16
+    container_name: identityapi-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=identityapidb
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: identityapi-pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 8085:80
+    depends_on:
+      - db
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+volumes:
+  postgres_data: null
