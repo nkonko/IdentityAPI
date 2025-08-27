@@ -10,6 +10,6 @@ namespace identityAPI.Infrastructure.Persistence
             : base(options)
         {
         }
-        // DbSets adicionales aquí
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

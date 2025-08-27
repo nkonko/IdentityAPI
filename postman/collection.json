@@ -1,0 +1,355 @@
+{
+  "info": {
+    "name": "IdentityAPI SaaS Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "host", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{host}}/api/auth/register", "host": ["{{host}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"email\": \"user1@demo.com\",\n  \"password\": \"User123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{host}}/api/auth/login", "host": ["{{host}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{host}}/api/auth/refresh", "host": ["{{host}}"], "path": ["api", "auth", "refresh"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\",\n  \"refreshToken\": \"<refresh_token_aqui>\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/users", "host": ["{{host}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Get User by Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/users/{{userId}}", "host": ["{{host}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/users", "host": ["{{host}}"], "path": ["api", "users"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"newuser\",\n  \"email\": \"newuser@demo.com\",\n  \"password\": \"User123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/users/{{userId}}", "host": ["{{host}}"], "path": ["api", "users", "{{userId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"updateduser\",\n  \"email\": \"updateduser@demo.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/users/{{userId}}", "host": ["{{host}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/users/me", "host": ["{{host}}"], "path": ["api", "users", "me"] }
+          }
+        },
+        {
+          "name": "Change My Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/users/me/password", "host": ["{{host}}"], "path": ["api", "users", "me", "password"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Admin123!\",\n  \"newPassword\": \"NuevoPass123!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/roles", "host": ["{{host}}"], "path": ["api", "roles"] }
+          }
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/roles", "host": ["{{host}}"], "path": ["api", "roles"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manager\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/roles/{{roleId}}", "host": ["{{host}}"], "path": ["api", "roles", "{{roleId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UpdatedRole\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/roles/{{roleId}}", "host": ["{{host}}"], "path": ["api", "roles", "{{roleId}}"] }
+          }
+        },
+        {
+          "name": "Get Role Permissions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/roles/{{roleId}}/permissions", "host": ["{{host}}"], "path": ["api", "roles", "{{roleId}}", "permissions"] }
+          }
+        },
+        {
+          "name": "Add Role Permissions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/roles/{{roleId}}/permissions", "host": ["{{host}}"], "path": ["api", "roles", "{{roleId}}", "permissions"] },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  { \"name\": \"CanEdit\" },\n  { \"name\": \"CanDelete\" }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/dashboard/summary", "host": ["{{host}}"], "path": ["api", "dashboard", "summary"] }
+          }
+        },
+        {
+          "name": "Metrics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/dashboard/metrics", "host": ["{{host}}"], "path": ["api", "dashboard", "metrics"] }
+          }
+        },
+        {
+          "name": "Recent",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/dashboard/recent", "host": ["{{host}}"], "path": ["api", "dashboard", "recent"] }
+          }
+        },
+        {
+          "name": "Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/dashboard/notifications", "host": ["{{host}}"], "path": ["api", "dashboard", "notifications"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/settings", "host": ["{{host}}"], "path": ["api", "settings"] }
+          }
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/settings", "host": ["{{host}}"], "path": ["api", "settings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyName\": \"Demo Company\",\n  \"supportEmail\": \"support@demo.com\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/audit/logs", "host": ["{{host}}"], "path": ["api", "audit", "logs"] }
+          }
+        },
+        {
+          "name": "Get Audit Logs by User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/audit/logs/{{userId}}", "host": ["{{host}}"], "path": ["api", "audit", "logs", "{{userId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "Get Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{host}}/api/subscriptions", "host": ["{{host}}"], "path": ["api", "subscriptions"] }
+          }
+        },
+        {
+          "name": "Create Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/subscriptions", "host": ["{{host}}"], "path": ["api", "subscriptions"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"plan\": \"basic\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Subscription",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{host}}/api/subscriptions/{{subscriptionId}}", "host": ["{{host}}"], "path": ["api", "subscriptions", "{{subscriptionId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan\": \"premium\",\n  \"endDate\": null\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Webhook",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{host}}/api/payments/webhook", "host": ["{{host}}"], "path": ["api", "payments", "webhook"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"payment_success\",\n  \"data\": \"{...}\" \n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

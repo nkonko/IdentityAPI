@@ -1,4 +1,5 @@
 using identityAPI.Core.Entities;
+using identityAPI.Infrastructure;
 using identityAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -6,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +19,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+// Registro automático de servicios de infraestructura
+builder.Services.AddApplicationServices();
 
 // Configuración de JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -73,34 +76,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-async Task EnsureDatabaseReadyAndSeedRolesAsync(IServiceProvider serviceProvider, int maxRetries = 10, int delaySeconds = 5)
-{
-    var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    // Espera a que la base de datos esté lista con retry
-    int retries = 0;
-    while (true)
-    {
-        try
-        {
-            await context.Database.OpenConnectionAsync();
-            await context.Database.CloseConnectionAsync();
-            break;
-        }
-        catch (NpgsqlException)
-        {
-            retries++;
-            if (retries >= maxRetries)
-                throw;
-            await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
-        }
-    }
-
-    // Aplica migraciones
-    await context.Database.MigrateAsync();
-}
-
 var app = builder.Build();
 
 // Espera a que la base de datos esté lista y aplica migraciones
@@ -129,19 +104,10 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
 }
 
-// Ahora, en un nuevo scope, seed de roles
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = new[] { "Admin", "User" };
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-}
+// Seed de roles
+await SeedRoles.InitializeAsync(app.Services);
+// Seed de usuario admin principal
+await SeedMainAdmin.InitializeAsync(app.Services);
 
 if (app.Environment.IsDevelopment())
 {
