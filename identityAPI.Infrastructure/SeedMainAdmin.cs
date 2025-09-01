@@ -13,7 +13,7 @@ namespace identityAPI.Infrastructure
 
             var adminUserName = "admin";
             var adminEmail = "admin@demo.com";
-            var adminPassword = "Admin123!"; // Cambia esto en producción
+            var adminPassword = "Admin123!"; // Remove
 
             var adminUser = await userManager.FindByNameAsync(adminUserName);
             if (adminUser == null)
@@ -29,7 +29,6 @@ namespace identityAPI.Infrastructure
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
-                // Puedes loggear errores si lo deseas
             }
         }
     }

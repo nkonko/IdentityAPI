@@ -2,18 +2,11 @@ using identityAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using identityAPI.Infrastructure.Persistence;
+using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure.Services
 {
-    public interface IRoleService
-    {
-        Task<IEnumerable<RoleDto>> GetRolesAsync();
-        Task<RoleDto> CreateRoleAsync(RoleCreateDto dto);
-        Task<bool> UpdateRoleAsync(string id, RoleUpdateDto dto);
-        Task<bool> DeleteRoleAsync(string id);
-        Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(string id);
-        Task<bool> AddRolePermissionsAsync(string id, IEnumerable<PermissionDto> dtos);
-    }
+    
 
     public class RoleService : IRoleService
     {

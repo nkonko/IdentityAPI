@@ -1,14 +1,10 @@
 using identityAPI.Core.Models;
 using identityAPI.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure.Services
 {
-    public interface IAuditService
-    {
-        Task<IEnumerable<AuditLogDto>> GetLogsAsync();
-        Task<IEnumerable<AuditLogDto>> GetLogsByUserAsync(string userId);
-    }
+    
 
     public class AuditService : IAuditService
     {
@@ -21,13 +17,11 @@ namespace identityAPI.Infrastructure.Services
 
         public async Task<IEnumerable<AuditLogDto>> GetLogsAsync()
         {
-            // Placeholder: implement audit log storage
             return new List<AuditLogDto>();
         }
 
         public async Task<IEnumerable<AuditLogDto>> GetLogsByUserAsync(string userId)
         {
-            // Placeholder: implement audit log storage
             return new List<AuditLogDto>();
         }
     }

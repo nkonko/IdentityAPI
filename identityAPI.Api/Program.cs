@@ -1,4 +1,4 @@
-using identityAPI.Core.Entities;
+ï»¿using identityAPI.Core.Entities;
 using identityAPI.Infrastructure;
 using identityAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,20 +10,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de EF Core y PostgreSQL
+// ConfiguraciÃ³n de EF Core y PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Configuración de Identity
+// ConfiguraciÃ³n de Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Registro automático de servicios de infraestructura
+// Registro automÃ¡tico de servicios de infraestructura
 builder.Services.AddApplicationServices();
 
-// Configuración de JWT
+// ConfiguraciÃ³n de JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "");
 builder.Services.AddAuthentication(options =>
@@ -76,9 +76,25 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// ðŸ‘‰ CORS SOLO para desarrollo
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAngularDev",
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+    });
+}
+
 var app = builder.Build();
 
-// Espera a que la base de datos esté lista y aplica migraciones
+// Espera a que la base de datos estÃ© lista y aplica migraciones
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -113,11 +129,15 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // ðŸ‘‰ Activamos CORS solo en desarrollo
+    app.UseCors("AllowAngularDev");
 }
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

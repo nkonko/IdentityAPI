@@ -1,7 +1,7 @@
 using identityAPI.Core.Models;
+using identityAPI.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using identityAPI.Infrastructure.Services;
 
 namespace identityAPI.Api.Controllers
 {

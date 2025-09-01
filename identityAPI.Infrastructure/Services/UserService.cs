@@ -3,19 +3,10 @@ using identityAPI.Core.Entities;
 using identityAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure.Services
 {
-    public interface IUserService
-    {
-        Task<IEnumerable<UserDto>> GetUsersAsync();
-        Task<UserDto?> GetUserByIdAsync(string id);
-        Task<UserDto> CreateUserAsync(UserCreateDto dto);
-        Task<bool> UpdateUserAsync(string id, UserUpdateDto dto);
-        Task<bool> DeleteUserAsync(string id);
-        Task<bool> ChangePasswordAsync(string userId, UserPasswordDto dto);
-    }
-
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -49,6 +40,7 @@ namespace identityAPI.Infrastructure.Services
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return null;
+
             var roles = await _userManager.GetRolesAsync(user);
             return new UserDto
             {

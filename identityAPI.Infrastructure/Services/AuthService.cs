@@ -6,18 +6,13 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure.Services
 {
-    public interface IAuthService
-    {
-        Task<AuthResponseDto> AuthenticateAsync(string username, string password);
-        Task<AuthResponseDto?> RefreshTokenAsync(RefreshRequestDto dto);
-    }
-
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -34,11 +29,22 @@ namespace identityAPI.Infrastructure.Services
         public async Task<AuthResponseDto> AuthenticateAsync(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+
+            if (user == null)
+            {
                 throw new UnauthorizedAccessException();
+            }
+            var validPassword = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!validPassword)
+            {
+                throw new UnauthorizedAccessException();
+
+            }
             var roles = await _userManager.GetRolesAsync(user);
             var token = GenerateJwtToken(user, roles);
             var refreshToken = await CreateRefreshTokenAsync(user);
+            
             return new AuthResponseDto
             {
                 Token = token,
@@ -51,13 +57,15 @@ namespace identityAPI.Infrastructure.Services
             var stored = await _context.RefreshTokens.Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Token == dto.RefreshToken && !r.Revoked);
             if (stored == null || stored.Expires < DateTime.UtcNow)
+            {
                 return null;
+            }
             var roles = await _userManager.GetRolesAsync(stored.User!);
             var newJwt = GenerateJwtToken(stored.User!, roles);
-            // Opcional: revocar el refresh token usado y emitir uno nuevo
             stored.Revoked = true;
             var newRefresh = await CreateRefreshTokenAsync(stored.User!);
             await _context.SaveChangesAsync();
+
             return new AuthResponseDto
             {
                 Token = newJwt,
@@ -86,23 +94,23 @@ namespace identityAPI.Infrastructure.Services
         private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? ""));
-            var creds = new Microsoft.IdentityModel.Tokens.SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
-            var claims = new List<System.Security.Claims.Claim>
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? ""));
+            var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
             {
-                new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Id),
-                new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName, user.UserName ?? ""),
-                new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email ?? "")
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName ?? ""),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? "")
             };
-            claims.AddRange(roles.Select(r => new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, r)));
-            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds
             );
-            return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

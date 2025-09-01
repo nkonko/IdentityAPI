@@ -1,17 +1,11 @@
 using identityAPI.Core.Models;
 using identityAPI.Infrastructure.Persistence;
+using identityAPI.Infrastructure.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace identityAPI.Infrastructure.Services
 {
-    public interface IDashboardService
-    {
-        Task<DashboardSummaryDto> GetSummaryAsync();
-        Task<DashboardMetricsDto> GetMetricsAsync();
-        Task<DashboardRecentDto> GetRecentAsync();
-        Task<IEnumerable<DashboardNotificationDto>> GetNotificationsAsync();
-    }
-
+    
     public class DashboardService : IDashboardService
     {
         private readonly ApplicationDbContext _context;
@@ -27,7 +21,7 @@ namespace identityAPI.Infrastructure.Services
             {
                 TotalUsers = await _context.Users.CountAsync(),
                 TotalRoles = await _context.Roles.CountAsync(),
-                TotalSubscriptions = 0 // Placeholder
+                TotalSubscriptions = 0 
             };
         }
 
@@ -35,9 +29,9 @@ namespace identityAPI.Infrastructure.Services
         {
             return new DashboardMetricsDto
             {
-                ActiveUsers = await _context.Users.CountAsync(), // Placeholder
-                NewUsersThisMonth = 0, // Placeholder
-                RevenueThisMonth = 0 // Placeholder
+                ActiveUsers = await _context.Users.CountAsync(), 
+                NewUsersThisMonth = 0,
+                RevenueThisMonth = 0 
             };
         }
 
@@ -45,13 +39,13 @@ namespace identityAPI.Infrastructure.Services
         {
             return new DashboardRecentDto
             {
-                RecentActivities = new List<string>() // Placeholder
+                RecentActivities = new List<string>() 
             };
         }
 
         public async Task<IEnumerable<DashboardNotificationDto>> GetNotificationsAsync()
         {
-            return new List<DashboardNotificationDto>(); // Placeholder
+            return new List<DashboardNotificationDto>(); 
         }
     }
 }

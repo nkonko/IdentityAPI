@@ -1,6 +1,5 @@
-using identityAPI.Core.Entities;
 using identityAPI.Core.Models;
-using identityAPI.Infrastructure.Services;
+using identityAPI.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

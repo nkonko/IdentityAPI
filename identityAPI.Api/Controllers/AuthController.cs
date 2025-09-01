@@ -1,13 +1,8 @@
 using identityAPI.Core.Entities;
 using identityAPI.Core.Models;
-using identityAPI.Infrastructure.Services;
-using identityAPI.Infrastructure.Persistence;
+using identityAPI.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace identityAPI.Api.Controllers
 {

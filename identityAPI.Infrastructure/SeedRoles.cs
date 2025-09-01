@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using identityAPI.Core.Entities;
 using identityAPI.Infrastructure.Persistence;
 using Npgsql;
 
@@ -15,7 +14,6 @@ namespace identityAPI.Infrastructure
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            // Espera a que la base de datos esté lista con retry
             int retries = 0;
             while (true)
             {
@@ -34,11 +32,9 @@ namespace identityAPI.Infrastructure
                 }
             }
 
-            // Aplica migraciones
             await context.Database.MigrateAsync();
 
-            // Seed de roles
-            string[] roles = new[] { "User", "Admin" };
+            string[] roles = ["User", "Admin"];
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
