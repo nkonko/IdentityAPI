@@ -28,9 +28,14 @@ namespace identityAPI.Infrastructure.Services
                 dtos.Add(new UserDto
                 {
                     Id = user.Id,
-                    UserName = user.UserName ?? "",
                     Email = user.Email ?? "",
-                    Roles = roles
+                    Roles = roles,
+                    Bio = user.Bio ?? "",
+                    Name = user.Name,
+                    Position = user.Position,
+                    ProfilePictureUrl = user.ProfilePictureUrl,
+                    LastLogin = user.LastLogin,
+                    Status = user.Status
                 });
             }
             return dtos;
@@ -45,15 +50,26 @@ namespace identityAPI.Infrastructure.Services
             return new UserDto
             {
                 Id = user.Id,
-                UserName = user.UserName ?? "",
                 Email = user.Email ?? "",
-                Roles = roles
+                Roles = roles,
+                Bio = user.Bio ?? "",
+                Name = user.Name,
+                Position = user.Position,
+                ProfilePictureUrl = user.ProfilePictureUrl,
+                LastLogin = user.LastLogin,
+                Status = user.Status
             };
         }
 
         public async Task<UserDto> CreateUserAsync(UserCreateDto dto)
         {
-            var user = new ApplicationUser { UserName = dto.UserName, Email = dto.Email };
+            var user = new ApplicationUser
+            {
+                Email = dto.Email,
+                UserName = dto.Email,
+                Name = dto.Name,
+                Status = dto.Status
+            }; ;
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
                 throw new Exception("User creation failed");
@@ -62,9 +78,10 @@ namespace identityAPI.Infrastructure.Services
             return new UserDto
             {
                 Id = user.Id,
-                UserName = user.UserName ?? "",
+                Name= user.Name ?? "",
                 Email = user.Email ?? "",
-                Roles = roles
+                Roles = roles,
+                Status = UserStatus.Active
             };
         }
 
@@ -72,9 +89,13 @@ namespace identityAPI.Infrastructure.Services
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return false;
-            user.UserName = dto.UserName;
             user.Email = dto.Email;
-            _context.Users.Update(user);
+            user.Name = dto.Name;
+            user.Bio  = dto.Bio;
+            user.ProfilePictureUrl = dto.ProfilePictureUrl;
+            user.Position  = dto.Position;
+            user.Status = dto.Status;
+            await _userManager.UpdateAsync(user);
             await _context.SaveChangesAsync();
             return true;
         }

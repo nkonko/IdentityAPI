@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using identityAPI.Infrastructure.Services;
+using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure
 {

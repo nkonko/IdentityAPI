@@ -19,7 +19,9 @@ namespace identityAPI.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
-            => Ok(await _userService.GetUsersAsync());
+        {
+            return Ok(await _userService.GetUsersAsync());
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(string id)
