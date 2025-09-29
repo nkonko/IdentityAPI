@@ -1,4 +1,5 @@
 using identityAPI.Core.Models;
+using identityAPI.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using identityAPI.Infrastructure.Persistence;
@@ -6,16 +7,16 @@ using identityAPI.Infrastructure.Services.Interfaces;
 
 namespace identityAPI.Infrastructure.Services
 {
-    
-
     public class RoleService : IRoleService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public RoleService(RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
+        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
             _context = context;
         }
 
@@ -48,6 +49,14 @@ namespace identityAPI.Infrastructure.Services
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null) return false;
+            
+            // Prevenir cambio de nombre del rol Admin
+            if (role.Name?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true && 
+                !dto.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("No se puede cambiar el nombre del rol Admin del sistema.");
+            }
+            
             role.Name = dto.Name;
             var result = await _roleManager.UpdateAsync(role);
             return result.Succeeded;
@@ -57,6 +66,13 @@ namespace identityAPI.Infrastructure.Services
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null) return false;
+            
+            // Prevenir eliminación del rol Admin
+            if (role.Name?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                throw new InvalidOperationException("No se puede eliminar el rol Admin del sistema.");
+            }
+            
             var result = await _roleManager.DeleteAsync(role);
             return result.Succeeded;
         }

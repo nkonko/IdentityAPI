@@ -34,6 +34,7 @@ namespace identityAPI.Api.Controllers
         public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            
             var user = await _userService.CreateUserAsync(dto);
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -42,6 +43,7 @@ namespace identityAPI.Api.Controllers
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            
             var result = await _userService.UpdateUserAsync(id, dto);
             return result ? NoContent() : NotFound();
         }
@@ -70,6 +72,7 @@ namespace identityAPI.Api.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
+            
             var result = await _userService.ChangePasswordAsync(userId, dto);
             return result ? NoContent() : BadRequest();
         }

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using identityAPI.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +100,9 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
+
+// ✨ Middleware de manejo global de excepciones
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 // Espera a que la base de datos esté lista y aplica migraciones
 using (var scope = app.Services.CreateScope())

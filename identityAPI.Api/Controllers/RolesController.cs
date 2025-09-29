@@ -25,6 +25,7 @@ namespace identityAPI.Api.Controllers
         public async Task<ActionResult<RoleDto>> CreateRole([FromBody] RoleCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            
             var role = await _roleService.CreateRoleAsync(dto);
             return CreatedAtAction(nameof(GetRoles), new { id = role.Id }, role);
         }
@@ -33,6 +34,7 @@ namespace identityAPI.Api.Controllers
         public async Task<IActionResult> UpdateRole(string id, [FromBody] RoleUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            
             var result = await _roleService.UpdateRoleAsync(id, dto);
             return result ? NoContent() : NotFound();
         }

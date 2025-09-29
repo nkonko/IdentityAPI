@@ -23,5 +23,8 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Filters\" />
+  </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties nswag_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

@@ -104,6 +104,22 @@ namespace identityAPI.Infrastructure.Services
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return false;
+            
+            // Verificar si el usuario es administrador
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin"))
+            {
+                // Contar cuántos administradores activos hay en total
+                var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+                var activeAdmins = adminUsers.Count(u => u.Status == UserStatus.Active);
+                
+                // Si es el último admin activo, no permitir eliminación
+                if (activeAdmins <= 1)
+                {
+                    throw new InvalidOperationException("No se puede eliminar al último administrador activo del sistema.");
+                }
+            }
+            
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return true;
@@ -115,6 +131,24 @@ namespace identityAPI.Infrastructure.Services
             if (user == null) return false;
             var result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
             return result.Succeeded;
+        }
+        
+        /// <summary>
+        /// Método auxiliar para validar si se puede desactivar un usuario administrador
+        /// </summary>
+        private async Task<bool> CanDeactivateAdminAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return true;
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains("Admin")) return true;
+            
+            // Contar administradores activos excluyendo el usuario actual
+            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+            var activeAdminsCount = adminUsers.Count(u => u.Status == UserStatus.Active && u.Id != userId);
+            
+            return activeAdminsCount > 0;
         }
     }
 }
