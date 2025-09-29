@@ -24,3 +24,6 @@ services:
         max-file: "3"
     volumes:
       - .:/src
+    # Visual Studio launch configuration for swagger
+    labels:
+      - "com.microsoft.visualstudio.launch-url=/swagger"

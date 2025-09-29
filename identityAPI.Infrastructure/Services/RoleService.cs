@@ -61,16 +61,16 @@ namespace identityAPI.Infrastructure.Services
             return result.Succeeded;
         }
 
-        public async Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(string id)
+        public Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(string id)
         {
             // Placeholder: implement permissions logic as needed
-            return new List<PermissionDto>();
+            return Task.FromResult<IEnumerable<PermissionDto>>(new List<PermissionDto>());
         }
 
-        public async Task<bool> AddRolePermissionsAsync(string id, IEnumerable<PermissionDto> dtos)
+        public Task<bool> AddRolePermissionsAsync(string id, IEnumerable<PermissionDto> dtos)
         {
             // Placeholder: implement permissions logic as needed
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

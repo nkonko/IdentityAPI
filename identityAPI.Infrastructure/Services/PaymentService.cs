@@ -9,10 +9,10 @@ namespace identityAPI.Infrastructure.Services
 
     public class PaymentService : IPaymentService
     {
-        public async Task<bool> ProcessWebhookAsync(PaymentWebhookDto dto)
+        public Task<bool> ProcessWebhookAsync(PaymentWebhookDto dto)
         {
             // Placeholder: implement webhook logic
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

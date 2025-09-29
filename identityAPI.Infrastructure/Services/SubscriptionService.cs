@@ -20,22 +20,22 @@ namespace identityAPI.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<SubscriptionDto>> GetSubscriptionsAsync()
+        public Task<IEnumerable<SubscriptionDto>> GetSubscriptionsAsync()
         {
             // Placeholder: implement subscriptions storage
-            return new List<SubscriptionDto>();
+            return Task.FromResult<IEnumerable<SubscriptionDto>>(new List<SubscriptionDto>());
         }
 
-        public async Task<SubscriptionDto> CreateSubscriptionAsync(SubscriptionCreateDto dto)
+        public Task<SubscriptionDto> CreateSubscriptionAsync(SubscriptionCreateDto dto)
         {
             // Placeholder: implement subscriptions storage
-            return new SubscriptionDto();
+            return Task.FromResult(new SubscriptionDto());
         }
 
-        public async Task<bool> UpdateSubscriptionAsync(string id, SubscriptionUpdateDto dto)
+        public Task<bool> UpdateSubscriptionAsync(string id, SubscriptionUpdateDto dto)
         {
             // Placeholder: implement subscriptions storage
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

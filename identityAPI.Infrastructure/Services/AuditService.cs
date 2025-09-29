@@ -15,14 +15,14 @@ namespace identityAPI.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<AuditLogDto>> GetLogsAsync()
+        public Task<IEnumerable<AuditLogDto>> GetLogsAsync()
         {
-            return new List<AuditLogDto>();
+            return Task.FromResult<IEnumerable<AuditLogDto>>(new List<AuditLogDto>());
         }
 
-        public async Task<IEnumerable<AuditLogDto>> GetLogsByUserAsync(string userId)
+        public Task<IEnumerable<AuditLogDto>> GetLogsByUserAsync(string userId)
         {
-            return new List<AuditLogDto>();
+            return Task.FromResult<IEnumerable<AuditLogDto>>(new List<AuditLogDto>());
         }
     }
 }

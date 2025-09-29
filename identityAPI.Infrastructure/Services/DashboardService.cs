@@ -35,17 +35,17 @@ namespace identityAPI.Infrastructure.Services
             };
         }
 
-        public async Task<DashboardRecentDto> GetRecentAsync()
+        public Task<DashboardRecentDto> GetRecentAsync()
         {
-            return new DashboardRecentDto
+            return Task.FromResult(new DashboardRecentDto
             {
                 RecentActivities = new List<string>() 
-            };
+            });
         }
 
-        public async Task<IEnumerable<DashboardNotificationDto>> GetNotificationsAsync()
+        public Task<IEnumerable<DashboardNotificationDto>> GetNotificationsAsync()
         {
-            return new List<DashboardNotificationDto>(); 
+            return Task.FromResult<IEnumerable<DashboardNotificationDto>>(new List<DashboardNotificationDto>()); 
         }
     }
 }

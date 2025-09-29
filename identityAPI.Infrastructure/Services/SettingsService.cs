@@ -19,16 +19,16 @@ namespace identityAPI.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<SettingsDto> GetSettingsAsync()
+        public Task<SettingsDto> GetSettingsAsync()
         {
             // Placeholder: implement settings storage
-            return new SettingsDto { CompanyName = "Demo", SupportEmail = "support@example.com" };
+            return Task.FromResult(new SettingsDto { CompanyName = "Demo", SupportEmail = "support@example.com" });
         }
 
-        public async Task<bool> UpdateSettingsAsync(SettingsUpdateDto dto)
+        public Task<bool> UpdateSettingsAsync(SettingsUpdateDto dto)
         {
             // Placeholder: implement settings update
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
