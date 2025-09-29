@@ -10,4 +10,4 @@ RUN dotnet tool install --global dotnet-ef --version 9.0.0
 ENV PATH="$PATH:/root/.dotnet/tools"
 
 # Use dotnet watch for development
-ENTRYPOINT ["dotnet", "watch", "run", "--urls", "http://+:8080"]
+ENTRYPOINT ["sh", "-c", "echo ''; echo '?? IdentityAPI está iniciando...'; echo '?? Swagger UI: http://localhost:5000/swagger'; echo '?? API Base: http://localhost:5000'; echo '?? Modo desarrollo con hot-reload activado'; echo ''; dotnet watch run --urls http://+:8080"]

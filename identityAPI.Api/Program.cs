@@ -146,4 +146,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// 🚀 Mensaje de inicio para desarrollo
+if (app.Environment.IsDevelopment())
+{
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        Console.WriteLine("");
+        Console.WriteLine("🚀 IdentityAPI está corriendo!");
+        Console.WriteLine("📍 Swagger UI: http://localhost:5000/swagger");
+        Console.WriteLine("📍 API Base: http://localhost:5000");
+        Console.WriteLine("🔧 Modo desarrollo con hot-reload activado");
+        Console.WriteLine("💡 Haz Ctrl+Click en las URLs para abrirlas en tu navegador");
+        Console.WriteLine("");
+    });
+}
+
 app.Run();

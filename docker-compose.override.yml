@@ -1,12 +1,12 @@
 ---
 services:
-  api-dev:
+  api:
     build:
       context: .
       dockerfile: identityAPI.Api/Dockerfile.dev
     container_name: identityapi-api-dev
     ports:
-      - 5001:8080
+      - 5000:8080
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
@@ -24,6 +24,7 @@ services:
         max-file: "3"
     volumes:
       - .:/src
-    # Visual Studio launch configuration for swagger
     labels:
-      - "com.microsoft.visualstudio.launch-url=/swagger"
+      - "com.microsoft.visualstudio.launch-url=http://localhost:5000/swagger"
+      - "com.microsoft.visualstudio.debuggee.program=dotnet"
+      - "com.microsoft.visualstudio.debuggee.workingdirectory=/src/identityAPI.Api"
