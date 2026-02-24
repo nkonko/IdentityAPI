@@ -11,8 +11,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=identityapidb;Username=postgres;Password=postgres
-      - Jwt__Key=super_secret_dev_key
-      - Jwt__Issuer=identityapi
+      - Jwt__Key=12345678901234567890123456789012
+      - Jwt__Issuer=identityAPI
+      - Jwt__Audience=identityAPIUsers
     depends_on:
       - db
     tty: true
