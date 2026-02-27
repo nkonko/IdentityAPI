@@ -66,7 +66,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../IdentityClient/src/app/core/api/identity-api-client.ts",
+      "output": "../../IdentityClient/src/app/core/api/identity-api-client.ts",
       "newLineBehavior": "Auto"
     }
   }
