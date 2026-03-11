@@ -8,7 +8,7 @@ namespace identityAPI.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin,Manager")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -21,12 +21,14 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             return Ok(await _userService.GetUsersAsync());
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<UserDto>> GetUser(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -34,6 +36,7 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -43,6 +46,7 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -52,6 +56,7 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var result = await _userService.DeleteUserAsync(id);
@@ -59,7 +64,6 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize]
         public async Task<ActionResult<UserDto>> GetMe()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -69,7 +73,6 @@ namespace identityAPI.Api.Controllers
         }
 
         [HttpPatch("me/password")]
-        [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] UserPasswordDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -84,7 +87,6 @@ namespace identityAPI.Api.Controllers
         /// Upload avatar for the current user
         /// </summary>
         [HttpPatch("me/avatar")]
-        [Authorize]
         public async Task<ActionResult<AvatarUploadResponse>> UploadMyAvatar(IFormFile file)
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -97,7 +99,6 @@ namespace identityAPI.Api.Controllers
         /// Delete avatar for the current user
         /// </summary>
         [HttpDelete("me/avatar")]
-        [Authorize]
         public async Task<IActionResult> DeleteMyAvatar()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
