@@ -25,6 +25,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // Registro automático de servicios de infraestructura
 builder.Services.AddApplicationServices();
 
+// Registro del servicio de almacenamiento de archivos (Cloudinary, Local, etc.)
+builder.Services.AddFileStorageServices(builder.Configuration);
+
 // Configuración de JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? "");
@@ -143,6 +146,9 @@ if (app.Environment.IsDevelopment())
     // 👉 Activamos CORS solo en desarrollo
     app.UseCors("AllowAngularDev");
 }
+
+// Servir archivos estáticos (para almacenamiento local de avatares)
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
