@@ -4,6 +4,7 @@ using identityAPI.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -149,6 +150,18 @@ if (app.Environment.IsDevelopment())
 
 // Servir archivos estáticos (para almacenamiento local de avatares)
 app.UseStaticFiles();
+
+// Servir archivos desde la carpeta uploads
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

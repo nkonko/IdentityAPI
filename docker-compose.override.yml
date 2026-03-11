@@ -14,6 +14,10 @@ services:
       - Jwt__Key=12345678901234567890123456789012
       - Jwt__Issuer=identityAPI
       - Jwt__Audience=identityAPIUsers
+      - FileStorage__Provider=${FILESTORAGE_PROVIDER:-Local}
+      - FileStorage__Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME:-}
+      - FileStorage__Cloudinary__ApiKey=${CLOUDINARY_API_KEY:-}
+      - FileStorage__Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET:-}
     depends_on:
       - db
     tty: true

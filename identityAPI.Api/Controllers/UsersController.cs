@@ -87,6 +87,7 @@ namespace identityAPI.Api.Controllers
         /// Upload avatar for the current user
         /// </summary>
         [HttpPatch("me/avatar")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<AvatarUploadResponse>> UploadMyAvatar(IFormFile file)
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
